@@ -274,3 +274,54 @@ ul {
 		height: 0%;
 	}
 }
+
+.prev-next-but {
+	display: flex;
+	margin-left: 42%;
+	color: black;
+	margin-bottom:20px;
+}
+
+.prev-but {
+	width: 70px;
+	cursor: pointer;
+	height: 30px;
+	padding-top: 4px;
+	font-weight: bold;
+	border-radius: 30px;
+	border-color: black;
+	background-color: antiquewhite;
+	border-width: 2px;
+	border: 1px solid black;
+}
+
+.next-but {
+	width: 70px;
+	cursor: pointer;
+	background-color: antiquewhite;
+	height: 30px;
+	padding-top: 4px;
+	font-weight: bold;
+	border-radius: 30px;
+	margin-left: 20px;
+	border-color: black;
+	border-width: 2px;
+	border: 1px solid black;
+}
+	.prev-but.active:hover, .next-but.active:hover {
+		color: white;
+		background-color: #0b0029;
+	}
+
+	.prev-but.inactive, .next-but.inactive {
+		color: black;
+		border:none;
+		background-color: #c9c7c1;
+		font-weight: normal;
+	}
+
+
+
+
+
+
