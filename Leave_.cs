@@ -38,8 +38,6 @@ namespace WebApplication2.Controllers
                         SqlDataReader r = cmd.ExecuteReader();
                         while (r.Read())
                         {
-                           
-
                             dt.Add(new Week_status_data
                             {
                                 name = (string)r[0],
@@ -200,6 +198,60 @@ namespace WebApplication2.Controllers
             {
                 Success = true
             });
+        }
+
+        public ActionResult Get_Prev_week_data(List<Prev_week> obj)
+        {
+            string connectionString = ConfigurationManager.AppSettings["DBConnectionString"];
+            Debug.WriteLine(obj);
+            List<Week_status_data> dt = new List<Week_status_data>();
+            try
+            {
+                using (SqlConnection sql = new SqlConnection(connectionString))
+                {
+                    if (sql.State != ConnectionState.Open)
+                    {
+                        sql.Open();
+                    }
+                    obj.ForEach(x =>
+                    {
+                        string query = "select * from WeeklyEfforts where Date_ = @date";
+                        Debug.WriteLine(x.week_);
+                        using (SqlCommand cmd = new SqlCommand(query, sql))
+                        {
+                            cmd.Parameters.AddWithValue("@date", (string)x.week_);
+                            try
+                            {
+                                SqlDataReader r = cmd.ExecuteReader();
+                                while (r.Read())
+                                {
+                                    dt.Add(new Week_status_data
+                                    {
+                                        name = (string)r[0],
+                                        vid = (string)r[1],
+                                        day = (string)r[2],
+                                        date = (string)r[3],
+                                        value = (string)r[4]
+                                    });
+                                }
+                                r.Close();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Something went wrong");
+                            }
+                            string stringjson = JsonConvert.SerializeObject(dt);
+                            //Debug.WriteLine(stringjson);
+
+                        }
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return Json(dt, JsonRequestBehavior.AllowGet);
         }
     }
 }
