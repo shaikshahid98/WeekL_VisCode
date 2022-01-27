@@ -156,6 +156,10 @@ function Update_weekstatus_from_DB() {
                     <b>Need to be filled</b>
                     <span id="cbox-5"></span>
                 </p>`;
+
+    const note = document.getElementById("note");
+    note.innerHTML = `Note: Please try clicking on the corresponding rectangular cell to alter the status of each day.`;
+
 }
 
 function Add_Employee_details() {
@@ -227,40 +231,48 @@ function Add_Days_function  ()  {
     });
 }
 
+let week = [];
+
 function Set_Date  ()  {
     
-    let week = [];
-    for (let i = 1; i <= 7; i++) {
-        let curr = new Date
-        let first = curr.getDate() - curr.getDay() + i;
-        let day = new Date(curr.setDate(first)).toISOString().slice(8, 10)
-        let wk = new Date(curr.setDate(first)).toISOString().slice(0, 10)
-        week.push(day);
-        current_week.push(wk);
+    
+    if (current_week.length == 0) {
+        for (let i = 1; i <= 7; i++) {
+            let curr = new Date
+            let first = curr.getDate() - curr.getDay() + i;
+            let day = new Date(curr.setDate(first)).toISOString().slice(8, 10)
+            let wk = new Date(curr.setDate(first)).toISOString().slice(0, 10)
+            week.push(day);
+            current_week.push(wk);
+        }
     }
+    
     document.getElementById('Mon').innerHTML = week[0];
     document.getElementById('Tue').innerHTML = week[1];;
     document.getElementById('Wed').innerHTML = week[2];;
     document.getElementById('Thurs').innerHTML = week[3];;
     document.getElementById('Fri').innerHTML = week[4];;
     header.innerHTML = `<h2>Current Week Efforts (Mon,${week[0]} - Fri,${week[4]})</p>`;
-
-    for (var i = 6; i >= 2; i--) {
-        var curr = new Date
-        var first = curr.getDate() - curr.getDay();
-        var last = first - i;
-        var day = new Date(curr.setDate(last)).toISOString().split('T')[0];
-        var obj = {
-            week_: day
+    if (prev_dates.length == 0) {
+        for (var i = 6; i >= 2; i--) {
+            var curr = new Date
+            var first = curr.getDate() - curr.getDay();
+            var last = first - i;
+            var day = new Date(curr.setDate(last)).toISOString().split('T')[0];
+            var obj = {
+                week_: day
+            }
+            prev_dates.push(obj);
         }
-        prev_dates.push(obj);
     }
+    
     //console.log(prev_dates);
 }
 
 function start_curpage() {
 
-    $(document).ready(function () {
+   
+    if (all_emp_data.length == 0) {
         $.ajax({
             type: "GET",
             url: '/Leave_/GetData1',
@@ -274,13 +286,21 @@ function start_curpage() {
 
                 main.innerHTML = ``;
                 setTimeout('', 2000);
-                
+
                 Add_Employee_details();
-                
+
                 Add_Days_function();
             }
         })
-    })
+    }
+    else {
+        main.innerHTML = ``;
+        setTimeout('', 2000);
+
+        Add_Employee_details();
+
+        Add_Days_function();
+    }
     Set_Date();
     
 }
@@ -314,6 +334,15 @@ prev.addEventListener('click', (e) => {
     next.classList.add("active");
 });
 
+next.addEventListener('click', (e) => {
+    cur_load = 1;
+    //window.location.reload();
+    start_curpage();
+    prev.classList.remove("inactive");
+    prev.classList.add("active");
+    next.classList.remove("active");
+    next.classList.add("inactive");
+});
 
 function prev_week_status() {
     const Updated_data = [];
@@ -369,7 +398,7 @@ function start_prevpage() {
         contentType: "application/json",
         data: JSON.stringify(prev_dates),
         success: function (result) {
-            console.log(result);
+            //console.log(result);
             document.getElementById('Mon').innerHTML = prev_dates[0].week_.slice(-2);
             document.getElementById('Tue').innerHTML = prev_dates[1].week_.slice(-2);;
             document.getElementById('Wed').innerHTML = prev_dates[2].week_.slice(-2);;
@@ -406,16 +435,14 @@ function start_prevpage() {
                 let name = result[i].name, v_id = result[i].vid, day = "#" + Get_prev_week_date(result[i].date);
                 if (result[i].value == 'N/A' || Get_Class(result[i].value) == null) continue;
                 let cls = Get_Class(result[i].value);
-                console.log(result[i].date);
-                 console.log( Get_Class(result[i].value));
+                //console.log(result[i].date);
+                // console.log( Get_Class(result[i].value));
                 var emp_element = document.getElementById(v_id).querySelector(day);
                 if (emp_element)
                     emp_element.classList.add(cls);
-                console.log(name + " " + day + " " + cls);
+                //console.log(name + " " + day + " " + cls);
             }
-            
             Add_Days_function();
-
         },
         failure: function () {
             alert('data not received from DB');
@@ -425,9 +452,11 @@ function start_prevpage() {
 
 
 
+
 window.onload = function () {
     setTimeout('', 1500);
-    if (cur_load)
+   
         start_curpage();
+    
+    
 }
-
