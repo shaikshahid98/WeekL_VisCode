@@ -7,6 +7,7 @@ const prev_dates = [];
 
 var week_start;
 
+
 let cur_load = 1;
 
 const main = document.getElementById('main');
@@ -17,6 +18,7 @@ const header = document.getElementById('head');
 
 const All_Holiday_Data = {};
 
+const exp_btn = document.getElementById('exp-btn');
 
 const prev = document.getElementById('prev');
 
@@ -455,8 +457,46 @@ function start_prevpage() {
 
 window.onload = function () {
     setTimeout('', 1500);
-   
-        start_curpage();
-    
+    start_curpage();
     
 }
+
+function exp_prevpage() {
+
+}
+
+
+function exp_curpage() {
+    var tmp_cur_week = [];
+    for (var i = 0; i < current_week.length; i++) {
+        var tmp = {
+            week_: current_week[i]
+        }
+        tmp_cur_week.push(tmp);
+    }
+    $.ajax({
+        type: "Post",
+        url: '/Leave_/Get_Prev_week_data',
+        async: true,
+        contentType: "application/json",
+        data: JSON.stringify(tmp_cur_week),
+        success: function (result) {
+            console.log(result);
+            
+        },
+        failure: function () {
+            alert('data not received from DB');
+        }
+    });
+    
+}
+
+exp_btn.addEventListener('click', (e) => {
+    if (next.classList.contains("inactive"))
+        exp_curpage();
+    else exp_prevpage();
+});
+
+
+
+
