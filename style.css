@@ -9,6 +9,7 @@
 
 body {
 	/*background-image: url("https://cdn.pixabay.com/photo/2021/11/19/15/21/christmas-6809681_960_720.png");*/
+	/*background-image: url("https://media.istockphoto.com/vectors/christmas-pattern-vector-id873495850?s=612x612");*/
 	background-image: url("https://images.unsplash.com/photo-1575110201423-cd3910c87548?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80");
 	/*background-image: url("https://images.unsplash.com/photo-1605633561363-87dc6c83fd39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");*/
 	/*background-position: cover; /* Center the image */ */ background-repeat: no-repeat; /* Do not repeat the image */
