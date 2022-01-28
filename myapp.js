@@ -7,6 +7,7 @@ const prev_dates = [];
 
 var week_start;
 
+var prev_month_st, prev_month_end;
 
 let cur_load = 1;
 
@@ -26,11 +27,11 @@ const next = document.getElementById('next');
 
 const Get_status = (item) => {
     if (item.classList.contains("one"))
-        return "Present";
+        return "Worked";
     else if (item.classList.contains("two"))
         return "Half-Worked";
     else if (item.classList.contains("three"))
-        return "Absent";
+        return "On Leave";
     else if (item.classList.contains("four"))
         return "Holiday";
     else return "N/A";
@@ -89,9 +90,9 @@ submit.addEventListener('click', (e) => {
 
 function Get_Class(status) {
     const map = new Map();
-    map.set('Present', "one");
+    map.set('Worked', "one");
     map.set('Half-Worked', "two");
-    map.set('Absent', "three");
+    map.set('On Leave', "three");
     map.set('Holiday', "four");
     
     return map.get(status);
@@ -232,17 +233,24 @@ function Add_Days_function  ()  {
         });
     });
 }
+const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 let week = [];
 
 function Set_Date  ()  {
-    
+
+    var month_st, month_end;
     
     if (current_week.length == 0) {
         for (let i = 1; i <= 7; i++) {
-            let curr = new Date
+            let curr = new Date;
+            
             let first = curr.getDate() - curr.getDay() + i;
             let day = new Date(curr.setDate(first)).toISOString().slice(8, 10)
+            if (i == 1)
+                month_st = (month[new Date(curr.setDate(first)).getMonth()].slice(0, 3));
+            if(i==4)
+                month_end = (month[new Date(curr.setDate(first)).getMonth()].slice(0, 3));
             let wk = new Date(curr.setDate(first)).toISOString().slice(0, 10)
             week.push(day);
             current_week.push(wk);
@@ -254,13 +262,17 @@ function Set_Date  ()  {
     document.getElementById('Wed').innerHTML = week[2];;
     document.getElementById('Thurs').innerHTML = week[3];;
     document.getElementById('Fri').innerHTML = week[4];;
-    header.innerHTML = `<h2>Current Week Efforts (Mon,${week[0]} - Fri,${week[4]})</p>`;
+    header.innerHTML = `<h2>Current Week Efforts (${month_st} Mon,${week[0]} - ${month_end} Fri,${week[4]})</p>`;
     if (prev_dates.length == 0) {
         for (var i = 6; i >= 2; i--) {
             var curr = new Date
             var first = curr.getDate() - curr.getDay();
             var last = first - i;
             var day = new Date(curr.setDate(last)).toISOString().split('T')[0];
+            if (i == 6)
+                prev_month_st = month[new Date(curr.setDate(last)).getMonth()].slice(0, 3);
+            if (i == 2)
+                prev_month_end = month[new Date(curr.setDate(last)).getMonth()].slice(0, 3);;
             var obj = {
                 week_: day
             }
@@ -329,7 +341,14 @@ const Get_prev_week_date = (day) => {
 prev.addEventListener('click', (e) => {
     cur_load = 0;
     //window.location.reload();
-    start_prevpage();
+    
+    
+    setTimeout(function () {
+        start_prevpage();
+
+        alert("Loading previous week data");
+
+    }, 2000);
     prev.classList.remove("active");
     prev.classList.add("inactive");
     next.classList.remove("inactive");
@@ -339,7 +358,13 @@ prev.addEventListener('click', (e) => {
 next.addEventListener('click', (e) => {
     cur_load = 1;
     //window.location.reload();
-    start_curpage();
+   
+    
+    setTimeout(function () {
+        start_curpage();
+        alert("Loading current week data");
+        
+    }, 2000);
     prev.classList.remove("inactive");
     prev.classList.add("active");
     next.classList.remove("active");
@@ -406,7 +431,7 @@ function start_prevpage() {
             document.getElementById('Wed').innerHTML = prev_dates[2].week_.slice(-2);;
             document.getElementById('Thurs').innerHTML = prev_dates[3].week_.slice(-2);;
             document.getElementById('Fri').innerHTML = prev_dates[4].week_.slice(-2);;
-            header.innerHTML = `<h2>Previous Week Efforts (Mon,${prev_dates[0].week_.slice(-2)} - Fri,${prev_dates[4].week_.slice(-2)})</p>`;
+            header.innerHTML = `<h2>Previous Week Efforts (${prev_month_st} Mon,${prev_dates[0].week_.slice(-2)} - ${prev_month_end} Fri,${prev_dates[4].week_.slice(-2)})</p>`;
             main.innerHTML = ``;
             setTimeout('', 2000);
             for (var i = 0; i < all_emp_data.length; i++) {
@@ -428,7 +453,6 @@ function start_prevpage() {
                 <div class ="box" id="Friday"></div>
             </div>                      
         </div>`;
-
                 main.appendChild(ch);
             }
 
@@ -461,13 +485,26 @@ window.onload = function () {
     
 }
 
+var data_emp_order = ["v-dhnair", "v-inpalit", "v-kthamosh", "v-lakreddy", "v-ladivishnu", "v-mohsah", "v-Mokund", "v-nagumm", "v-pjaswanth", "v-prpale", "v-tejaswip", "v-bashasha",
+    "v-santpo", "v-krsath", "v-sogodd", "v-smohaseen", "v-venkumar", "v-vinkar"];
+
 function exp_prevpage() {
 
 }
 
 
+function Generate_excel(data) {
+    //var Result = [["Name", "Vid", current_week[0], current_week[1], current_week[2], current_week[3], current_week[4]];
+    //for (var i = 0; i < data_emp_order.length; i++) {
+    //    var tmp = [data];
+
+    //}
+
+}
+
 function exp_curpage() {
     var tmp_cur_week = [];
+   
     for (var i = 0; i < current_week.length; i++) {
         var tmp = {
             week_: current_week[i]
@@ -481,8 +518,14 @@ function exp_curpage() {
         contentType: "application/json",
         data: JSON.stringify(tmp_cur_week),
         success: function (result) {
-            console.log(result);
-            
+            //console.log(result);
+            var data = new Map;
+            for (var i = 0; i < result.length; i++) {
+                let name = result[i].name,vid = result[i].vid, date = result[i].date, value = result[i].value;
+                data[ vid + "_" + date] = value;
+            }
+            console.log(data);
+            Generate_excel(data);
         },
         failure: function () {
             alert('data not received from DB');
