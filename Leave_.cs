@@ -9,6 +9,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication2.Models;
+using Spire.Xls;
+using System.Windows;
+using System.Collections;
+using System.Drawing;
+using System.Windows.Forms;
+using System.IO;
 
 namespace WebApplication2.Controllers
 {
@@ -252,6 +258,106 @@ namespace WebApplication2.Controllers
 
             }
             return Json(dt, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Export_excel(List<List<string>> obj)
+        {
+            //Debug.WriteLine(obj);
+            
+            DateTime start = DateTime.Now;
+            Workbook workbook = new Workbook();
+            workbook.Worksheets.Add("Employee Data");
+            Worksheet sheet = workbook.Worksheets["Employee Data"];
+
+
+            ColorConverter cc = new ColorConverter();
+
+            for (int i = 0; i < obj.Count; i++)
+            {
+                List<string> tmp = obj[i];
+                for(int j=0;j< tmp.Count; j++)
+                {
+                    sheet.Range[i + 1, j + 1].Value = tmp[j];
+                    CellRange cell = sheet.Range[i + 1, j + 1];
+                    cell.Style.Font.Size = 9;
+                    cell.Style.Font.FontName = "Calibri";
+                    if (tmp[j]=="8")
+                    {
+                        cell.Style.Color = (Color.FromArgb(198,239,206));
+                        cell.Style.Font.Color = (Color.FromArgb(0,97,0));
+                        cell.Style.HorizontalAlignment = HorizontalAlignType.Center;
+                    }
+                    else if (tmp[j]=="0")
+                    {
+                        cell.Style.Color = (Color.FromArgb(255,196,206));
+                        cell.Style.Font.Color = (Color.FromArgb(156, 0, 6));
+                        cell.Style.HorizontalAlignment = HorizontalAlignType.Center;
+                    }
+                    else if(tmp[j]=="Holiday")
+                    {
+                        cell.Style.Color = (Color.FromArgb(166,166,166));
+                        cell.Style.Font.Color = (Color.FromArgb(0, 0, 0));
+                        cell.Style.HorizontalAlignment = HorizontalAlignType.Center;
+                    }
+
+                }
+
+            }
+
+            workbook.Worksheets.Remove("Sheet1");
+            workbook.Worksheets.Remove("Sheet2");
+            workbook.Worksheets.Remove("Sheet3");
+           // workbook.Worksheets.Remove("Evaluation Warning");
+
+
+            workbook.SaveToFile("D:/sample.xlsx", ExcelVersion.Version2010);
+
+            //System.Diagnostics.Process.Start("sample.xlsx");
+
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+                    System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
+                }
+            }
+
+            //ExcelDocViewer("D:/sample.xlsx");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            return Json(new ActionInfo()
+            {
+                Success = true
+            });
+        }
+        public void ExcelDocViewer(string fileName)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(fileName);
+            }
+            catch { }
         }
     }
 }
