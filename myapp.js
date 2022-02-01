@@ -1,4 +1,5 @@
 
+
 const all_emp_data = []
 
 const current_week = [];
@@ -236,22 +237,24 @@ function Add_Days_function  ()  {
 const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 let week = [];
-
+var month_st, month_end;
 function Set_Date  ()  {
 
-    var month_st, month_end;
+    
     
     if (current_week.length == 0) {
         for (let i = 1; i <= 7; i++) {
             let curr = new Date;
-            
             let first = curr.getDate() - curr.getDay() + i;
-            let day = new Date(curr.setDate(first)).toISOString().slice(8, 10)
-            if (i == 1)
-                month_st = (month[new Date(curr.setDate(first)).getMonth()].slice(0, 3));
-            if(i==4)
-                month_end = (month[new Date(curr.setDate(first)).getMonth()].slice(0, 3));
-            let wk = new Date(curr.setDate(first)).toISOString().slice(0, 10)
+            var full_day = new Date(curr.setDate(first));
+            let day = full_day.toISOString().slice(8, 10);
+            let wk = full_day.toISOString().slice(0,10);
+            if (i == 1) {
+                month_st = (month[full_day.getMonth()]).slice(0,3);
+            }
+            if (i == 5) {
+                month_end = (month[full_day.getMonth()]).slice(0, 3);
+            }
             week.push(day);
             current_week.push(wk);
         }
@@ -263,8 +266,11 @@ function Set_Date  ()  {
     document.getElementById('Thurs').innerHTML = week[3];;
     document.getElementById('Fri').innerHTML = week[4];;
     header.innerHTML = `<h2>Current Week Efforts (${month_st} Mon,${week[0]} - ${month_end} Fri,${week[4]})</p>`;
+    //console.log(current_week);
+    //console.log(week);
+
     if (prev_dates.length == 0) {
-        for (var i = 6; i >= 2; i--) {
+        for (var i = 6; i >= 0; i--) {
             var curr = new Date
             var first = curr.getDate() - curr.getDay();
             var last = first - i;
@@ -346,7 +352,7 @@ prev.addEventListener('click', (e) => {
     setTimeout(function () {
         start_prevpage();
 
-        alert("Loading previous week data");
+        alert("Please wait while fetching previous week data");
 
     }, 2000);
     prev.classList.remove("active");
@@ -362,7 +368,7 @@ next.addEventListener('click', (e) => {
     
     setTimeout(function () {
         start_curpage();
-        alert("Loading current week data");
+        alert("Please wait while fetching current week data");
         
     }, 2000);
     prev.classList.remove("inactive");
@@ -485,20 +491,98 @@ window.onload = function () {
     
 }
 
-var data_emp_order = ["v-dhnair", "v-inpalit", "v-kthamosh", "v-lakreddy", "v-ladivishnu", "v-mohsah", "v-Mokund", "v-nagumm", "v-pjaswanth", "v-prpale", "v-tejaswip", "v-bashasha",
+var data_emp_order = ["v-dhnair", "v-inpalit", "v-kthamosh", "v-lakreddy", "v-ladivishnu", "v-mohsah", "v-mokund", "v-nagumm", "v-pjaswanth", "v-prpale", "v-tejaswip", "v-bashasha",
     "v-santpo", "v-krsath", "v-sogodd", "v-smohaseen", "v-venkumar", "v-vinkar"];
 
 function exp_prevpage() {
+    var tmp_prev_week = [];
+    //console.log(prev_dates);
+    for (var i = 0; i < prev_dates.length; i++) {
+        tmp_prev_week.push(prev_dates[i].week_);
+    }
+    console.log(tmp_prev_week)
+    $.ajax({
+        type: "Post",
+        url: '/Leave_/Get_Prev_week_data',
+        async: true,
+        contentType: "application/json",
+        data: JSON.stringify(prev_dates),
+        success: function (result) {
+            console.log(result);
+            var data = new Map;
+            for (var i = 0; i < result.length; i++) {
+                let name = result[i].name, vid = result[i].vid, date = result[i].date, value = result[i].value;
+                data[vid + "_" + date] = value;
+            }
+            //console.log(data);
+            Generate_excel(data, tmp_prev_week);
+        },
+        failure: function () {
+            alert('data not received from DB');
+        }
+    });
 
 }
 
+function Get_exp_status(stat) {
+    if (stat == "Worked" || stat == "Half-Worked")
+        return "8";
+    if (stat == "On Leave")
+        return "0";
+    if (stat == "Holiday")
+        return stat;
+    return null;
+}
 
-function Generate_excel(data) {
-    //var Result = [["Name", "Vid", current_week[0], current_week[1], current_week[2], current_week[3], current_week[4]];
-    //for (var i = 0; i < data_emp_order.length; i++) {
-    //    var tmp = [data];
 
-    //}
+function Generate_excel(data, week) {
+    //console.log(week);
+    var Result = [];
+    var head = ["Vid"];
+    for (var i = 0; i < week.length-2; i++) {
+        if (i == 0)
+            head.push("Mon-" + week[i].slice(-2) );
+        if (i == 1)
+            head.push("Tue-" + week[i].slice(-2) );
+        if (i == 2)
+            head.push("Wed-" + week[i].slice(-2) );
+        if (i == 3)
+            head.push("Thurs-" + week[i].slice(-2));
+        if (i == 4)
+            head.push("Fri-" + week[i].slice(-2));
+    }
+    Result.push(head);
+    for (var i = 0; i < data_emp_order.length; i++) {
+        var tmp = [data_emp_order[i]], vid = data_emp_order[i];
+        for (var j = 0; j < week.length-2; j++) {
+            var tmp_val = Get_exp_status(data[vid + "_" + week[j]]);
+            if (tmp_val) {
+                tmp.push(tmp_val);
+            }
+            else tmp.push("");
+        }
+        Result.push(tmp);
+        //console.log(tmp);
+    }
+    console.log(Result);
+
+    $.ajax({
+        type: "Post",
+        url: '/Leave_/Export_excel',
+        async: true,
+        contentType: "application/json",
+        data: JSON.stringify(Result),
+        success: function (result) {
+            if (result.Success)
+                console.log("file sent to export");
+        },
+        failure: function () {
+            alert('data not send to Excel export');
+        }
+    });
+
+
+
 
 }
 
@@ -513,6 +597,7 @@ function exp_curpage() {
     }
     $.ajax({
         type: "Post",
+        //using prev week function for getting current week data from DB
         url: '/Leave_/Get_Prev_week_data',
         async: true,
         contentType: "application/json",
@@ -524,8 +609,8 @@ function exp_curpage() {
                 let name = result[i].name,vid = result[i].vid, date = result[i].date, value = result[i].value;
                 data[ vid + "_" + date] = value;
             }
-            console.log(data);
-            Generate_excel(data);
+            //console.log(data);
+            Generate_excel(data, current_week);
         },
         failure: function () {
             alert('data not received from DB');
@@ -543,3 +628,68 @@ exp_btn.addEventListener('click', (e) => {
 
 
 
+
+
+  //console.log(week);
+    //var Result = [];
+    //var head = ["Vid"];
+    //for (var i = 0; i < week.length-2; i++) {
+    //    if (i == 0)
+    //        head.push("Mon-" + week[i].slice(-2) );
+    //    if (i == 1)
+    //        head.push("Tue-" + week[i].slice(-2) );
+    //    if (i == 2)
+    //        head.push("Wed-" + week[i].slice(-2) );
+    //    if (i == 3)
+    //        head.push("Thurs-" + week[i].slice(-2));
+    //    if (i == 4)
+    //        head.push("Fri-" + week[i].slice(-2));
+    //}
+    //Result.push(head);
+    //for (var i = 0; i < data_emp_order.length; i++) {
+    //    var tmp = [data_emp_order[i]], vid = data_emp_order[i];
+    //    for (var j = 0; j < week.length-2; j++) {
+
+    //        var tmp_val = Get_exp_status(data[vid + "_" + week[j]]);
+    //        if (tmp_val) {
+    //            tmp.push(tmp_val);
+    //        }
+    //        else tmp.push("");
+    //    }
+    //    Result.push(tmp);
+    //}
+
+    //var csvContent = '';
+
+    //Result.forEach(function (RowItem, RowIndex) {
+    //    RowItem.forEach(function (ColItem, ColIndex) {
+    //        csvContent += ColItem + ',';
+    //        if (ColItem == "8")
+    //            RowItem.getCell(ColIndex).font = { color: { argb: "004e47cc" } };
+    //    });
+    //    csvContent += "\r\n";
+    //});
+
+
+    //var download = function (content, fileName, mimeType) {
+    //    var a = document.createElement('a');
+    //    mimeType = mimeType || 'application/octet-stream';
+
+    //    if (navigator.msSaveBlob) { 
+    //        navigator.msSaveBlob(new Blob([content], {
+    //            type: mimeType
+    //        }), fileName);
+    //    } else if (URL && 'download' in a) { 
+    //        a.href = URL.createObjectURL(new Blob([content], {
+    //            type: mimeType
+    //        }));
+    //        a.setAttribute('download', fileName);
+    //        document.body.appendChild(a);
+    //        a.click();
+    //        document.body.removeChild(a);
+    //    } else {
+    //        location.href = 'data:application/octet-stream,' + encodeURIComponent(content); 
+    //    }
+    //}
+
+    //download(csvContent, 'Weekly-Data.csv', 'text/csv;encoding:utf-8');
