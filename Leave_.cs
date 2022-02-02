@@ -106,6 +106,13 @@ namespace WebApplication2.Controllers
         public ActionResult Get_upd_Data(List<Upd_EMP_data> obj)
         {
             //var executed = 0;
+            if(obj.Count ==0 || obj==null)
+            {
+                return Json(new ActionInfo()
+                {
+                    Success = true
+                });
+            }
 
             string connectionString = ConfigurationManager.AppSettings["DBConnectionString"];
             Debug.WriteLine(obj);
