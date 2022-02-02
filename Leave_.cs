@@ -13,7 +13,7 @@ using Spire.Xls;
 using System.Windows;
 using System.Collections;
 using System.Drawing;
-using System.Windows.Forms;
+
 using System.IO;
 
 namespace WebApplication2.Controllers
@@ -270,6 +270,7 @@ namespace WebApplication2.Controllers
             Worksheet sheet = workbook.Worksheets["Employee Data"];
 
 
+
             ColorConverter cc = new ColorConverter();
 
             for (int i = 0; i < obj.Count; i++)
@@ -312,39 +313,8 @@ namespace WebApplication2.Controllers
 
             workbook.SaveToFile("D:/sample.xlsx", ExcelVersion.Version2010);
 
-            //System.Diagnostics.Process.Start("sample.xlsx");
 
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    string[] files = Directory.GetFiles(fbd.SelectedPath);
-
-                    System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
-                }
-            }
-
-            //ExcelDocViewer("D:/sample.xlsx");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            ExcelDocViewer("D:/sample.xlsx");
 
             return Json(new ActionInfo()
             {
