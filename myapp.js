@@ -266,19 +266,21 @@ function Set_Date  ()  {
     document.getElementById('Thurs').innerHTML = week[3];;
     document.getElementById('Fri').innerHTML = week[4];;
     header.innerHTML = `<h2>Current Week Efforts (${month_st} Mon,${week[0]} - ${month_end} Fri,${week[4]})</p>`;
-    //console.log(current_week);
-    //console.log(week);
+
+
 
     if (prev_dates.length == 0) {
         for (var i = 6; i >= 0; i--) {
             var curr = new Date
             var first = curr.getDate() - curr.getDay();
             var last = first - i;
-            var day = new Date(curr.setDate(last)).toISOString().split('T')[0];
+            var full_day = new Date(curr.setDate(last));
+
+            var day = full_day.toISOString().split('T')[0];
             if (i == 6)
-                prev_month_st = month[new Date(curr.setDate(last)).getMonth()].slice(0, 3);
+                prev_month_st = month[full_day.getMonth()].slice(0, 3);
             if (i == 2)
-                prev_month_end = month[new Date(curr.setDate(last)).getMonth()].slice(0, 3);;
+                prev_month_end = month[full_day.getMonth()].slice(0, 3);;
             var obj = {
                 week_: day
             }
@@ -423,7 +425,7 @@ function prev_week_status() {
 
 
 function start_prevpage() {
-    //console.log(prev_dates);
+    console.log(prev_dates);
     $.ajax({
         type: "Post",
         url: '/Leave_/Get_Prev_week_data',
@@ -431,7 +433,7 @@ function start_prevpage() {
         contentType: "application/json",
         data: JSON.stringify(prev_dates),
         success: function (result) {
-            //console.log(result);
+            console.log(result);
             document.getElementById('Mon').innerHTML = prev_dates[0].week_.slice(-2);
             document.getElementById('Tue').innerHTML = prev_dates[1].week_.slice(-2);;
             document.getElementById('Wed').innerHTML = prev_dates[2].week_.slice(-2);;
