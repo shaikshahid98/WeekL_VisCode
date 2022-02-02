@@ -8,6 +8,69 @@ const prev_dates = [];
 
 var week_start;
 
+const img_url = [
+    //Jan - 4
+    ["https://images.unsplash.com/photo-1484313544071-4d67c88b99be?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=872&q=80",
+        "https://images.unsplash.com/photo-1513267257196-91be473829b3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
+        "https://images.unsplash.com/photo-1482331336918-c80fab6c90f2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80",
+        "https://images.unsplash.com/photo-1483737946376-7c6c89443adb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"],
+    //Feb -4
+    ["https://images.unsplash.com/photo-1420585269105-d908ec316eb3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "https://images.unsplash.com/photo-1514377006585-6e7975371bd6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=388&q=80",
+        "https://images.unsplash.com/photo-1482003297000-b7663a1673f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        "https://images.unsplash.com/photo-1507652400761-fa6f1489004a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+        
+    ],
+    //MArch-4
+    ["https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+        "https://images.unsplash.com/photo-1608463026422-8f43ab4ebac0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        "https://images.unsplash.com/photo-1559150182-a7144f7628f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=388&q=80",
+        "https://images.unsplash.com/photo-1485431142439-206ba3a9383e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=766&q=80"],
+    //April -4
+    ["https://images.unsplash.com/photo-1558172474-9c7c194c7d06?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80",
+        "https://images.unsplash.com/photo-1592356986971-68c56631013f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
+        "https://images.unsplash.com/photo-1543862475-eb136770ae9b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80",
+        "https://images.unsplash.com/photo-1456415333674-42b11b9f5b7b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"],
+    //May -4
+    ["https://images.unsplash.com/uploads/14121010130570e22bcdf/e1730efe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "https://images.unsplash.com/photo-1546548970-71785318a17b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        "https://images.unsplash.com/photo-1497321697169-1ca9f1c8a253?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80",
+        "https://images.unsplash.com/photo-1517260911058-0fcfd733702f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=943&q=80"],
+    //June -4
+    ["https://images.pexels.com/photos/1209611/pexels-photo-1209611.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+        "https://images.pexels.com/photos/712395/pexels-photo-712395.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "https://images.pexels.com/photos/1834609/pexels-photo-1834609.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "https://images.pexels.com/photos/2388650/pexels-photo-2388650.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"],
+    //July-4
+    ["https://images.unsplash.com/photo-1502389571309-3ab1b64625b6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
+        "https://images.unsplash.com/photo-1523772721666-22ad3c3b6f90?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+        "https://images.unsplash.com/photo-1513986615308-8f59cc8a16e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        "https://images.pexels.com/photos/2527563/pexels-photo-2527563.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"],
+    //Aug -4
+    ["https://images.unsplash.com/photo-1546548970-71785318a17b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        "https://images.unsplash.com/photo-1483737946376-7c6c89443adb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+        "https://images.unsplash.com/photo-1514377006585-6e7975371bd6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=388&q=80",
+        "https://images.unsplash.com/photo-1517260911058-0fcfd733702f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=943&q=80"],
+    //Sep-4
+    ["https://images.unsplash.com/photo-1508264165352-258db2ebd59b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1376&q=80",
+        "https://images.unsplash.com/photo-1538580619159-6c19131e1062?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        "https://images.unsplash.com/photo-1459478309853-2c33a60058e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+"https://images.unsplash.com/photo-1609779414353-ffa4ed701701?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mzh8fGF1dHVtbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"    ],
+    //Oct-4
+    ["https://images.unsplash.com/photo-1508454114099-35ca71420685?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80",
+        "https://images.unsplash.com/photo-1508454114099-35ca71420685?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80",
+        "https://images.unsplash.com/photo-1546810587-d0bea73bc463?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
+        "https://images.unsplash.com/photo-1540649514368-b057281b4a0a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"],
+    //Nov-4
+    ["https://images.unsplash.com/photo-1420585269105-d908ec316eb3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "https://images.pexels.com/photos/219837/pexels-photo-219837.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"],
+    //Dec-4
+    ["https://cdn.pixabay.com/photo/2021/11/19/15/21/christmas-6809681_960_720.png", "https://images.unsplash.com/photo-1545048702-79362596cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "https://images.unsplash.com/photo-1479740030693-66ad10f3a7b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "https://images.unsplash.com/photo-1575110169156-4b67c0d8c336?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=401&q=80",
+"https://images.unsplash.com/photo-1543589077-47d81606c1bf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"    ]
+]
+
 var prev_month_st, prev_month_end;
 
 let cur_load = 1;
@@ -82,9 +145,20 @@ function cur_week_status() {
 }
 
 submit.addEventListener('click', (e) => {
-    if (cur_load)
-        cur_week_status();
-    else prev_week_status();
+    var btns = document.querySelectorAll(".upd");
+    if (btns.length == 0) {
+        setTimeout(function () {
+
+            alert("No updates recognised by system");
+
+        }, 2000);
+    }
+    else {
+        if (cur_load)
+            cur_week_status();
+        else prev_week_status();
+    }
+    
     });
 
     
@@ -404,7 +478,7 @@ function prev_week_status() {
         Updated_data.push(sendinfo);
     });
     setTimeout('', 2000);
-    console.log(JSON.stringify(Updated_data));
+    //console.log(JSON.stringify(Updated_data));
     $.ajax({
         type: "Post",
         url: '/Leave_/Get_upd_Data',
@@ -425,7 +499,7 @@ function prev_week_status() {
 
 
 function start_prevpage() {
-    console.log(prev_dates);
+    //console.log(prev_dates);
     $.ajax({
         type: "Post",
         url: '/Leave_/Get_Prev_week_data',
@@ -433,7 +507,7 @@ function start_prevpage() {
         contentType: "application/json",
         data: JSON.stringify(prev_dates),
         success: function (result) {
-            console.log(result);
+            //console.log(result);
             document.getElementById('Mon').innerHTML = prev_dates[0].week_.slice(-2);
             document.getElementById('Tue').innerHTML = prev_dates[1].week_.slice(-2);;
             document.getElementById('Wed').innerHTML = prev_dates[2].week_.slice(-2);;
@@ -485,12 +559,21 @@ function start_prevpage() {
 }
 
 
+const load_bg_img = () => {
+    const d = new Date();
+    let month = d.getMonth();
+    var sz = img_url[month].length;
+    var ind = Math.floor((Math.random() * (sz - 0)) + 0) % sz;
+    console.log(ind);
+    var fin_img = "url(" + img_url[month][ind] + ")";
 
+    $("body").css("background-image", fin_img);
+}
 
 window.onload = function () {
     setTimeout('', 1500);
     start_curpage();
-    
+    load_bg_img();
 }
 
 var data_emp_order = ["v-dhnair", "v-inpalit", "v-kthamosh", "v-lakreddy", "v-ladivishnu", "v-mohsah", "v-mokund", "v-nagumm", "v-pjaswanth", "v-prpale", "v-tejaswip", "v-bashasha",
@@ -502,7 +585,7 @@ function exp_prevpage() {
     for (var i = 0; i < prev_dates.length; i++) {
         tmp_prev_week.push(prev_dates[i].week_);
     }
-    console.log(tmp_prev_week)
+    //console.log(tmp_prev_week)
     $.ajax({
         type: "Post",
         url: '/Leave_/Get_Prev_week_data',
@@ -510,7 +593,7 @@ function exp_prevpage() {
         contentType: "application/json",
         data: JSON.stringify(prev_dates),
         success: function (result) {
-            console.log(result);
+            //console.log(result);
             var data = new Map;
             for (var i = 0; i < result.length; i++) {
                 let name = result[i].name, vid = result[i].vid, date = result[i].date, value = result[i].value;
@@ -566,22 +649,27 @@ function Generate_excel(data, week) {
         Result.push(tmp);
         //console.log(tmp);
     }
-    console.log(Result);
+   // console.log(Result);
+    setTimeout(function () {
+        $.ajax({
+            type: "Post",
+            url: '/Leave_/Export_excel',
+            async: true,
+            contentType: "application/json",
+            data: JSON.stringify(Result),
+            success: function (result) {
 
-    $.ajax({
-        type: "Post",
-        url: '/Leave_/Export_excel',
-        async: true,
-        contentType: "application/json",
-        data: JSON.stringify(Result),
-        success: function (result) {
-            if (result.Success)
-                console.log("file sent to export");
-        },
-        failure: function () {
-            alert('data not send to Excel export');
-        }
-    });
+                //if (result.Success)
+                //    console.log("file sent to export");
+            },
+            failure: function () {
+                alert('data not send to Excel export');
+            }
+        });
+        alert("Please wait while fetching current week data");
+
+    }, 2000);
+   
 
 
 
@@ -597,6 +685,7 @@ function exp_curpage() {
         }
         tmp_cur_week.push(tmp);
     }
+
     $.ajax({
         type: "Post",
         //using prev week function for getting current week data from DB
