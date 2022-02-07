@@ -13,8 +13,25 @@ using Spire.Xls;
 using System.Windows;
 using System.Collections;
 using System.Drawing;
-
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Common;
+using Microsoft.TeamFoundation.Core.WebApi;
+using Microsoft.TeamFoundation.Framework.Client;
+using Microsoft.TeamFoundation.Server;
+using Microsoft.TeamFoundation.WorkItemTracking.Client.DataStore;
+using Microsoft.TeamFoundation.WorkItemTracking.Client.Internal;
+using Microsoft.TeamFoundation.WorkItemTracking.Client.Metadata;
+using Microsoft.TeamFoundation.WorkItemTracking.Client.Provision;
+using Microsoft.TeamFoundation.WorkItemTracking.Common;
+using Microsoft.TeamFoundation.WorkItemTracking.Common.DataStore;
+using Microsoft.TeamFoundation.WorkItemTracking.Internals;
+using Microsoft.TeamFoundation.WorkItemTracking.Proxy;
+using Microsoft.VisualStudio.Services.Common;
+using Microsoft.VisualStudio.Services.Common.Internal;
 using System.IO;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using Microsoft.VisualStudio.Services.Client;
+using System.Web.Hosting;
 
 namespace WebApplication2.Controllers
 {
@@ -23,6 +40,7 @@ namespace WebApplication2.Controllers
        
         public ActionResult Index()
         {
+            Console.WriteLine("UserName: {0}", Environment.UserName);
             return View();
         }
         public ActionResult Get_week_status()
@@ -212,7 +230,7 @@ namespace WebApplication2.Controllers
                 Success = true
             });
         }
-
+        
         public ActionResult Get_Prev_week_data(List<Prev_week> obj)
         {
             string connectionString = ConfigurationManager.AppSettings["DBConnectionString"];
@@ -336,5 +354,49 @@ namespace WebApplication2.Controllers
             }
             catch { }
         }
+
+        //public ActionResult About()
+        //{
+        //    ViewBag.UserName = User.Identity.Name;
+        //    //Debug.WriteLine(ViewBag.UserName);
+        //    return View();
+        //}
+
+
+        //private WorkItemStore GetWorkItemInstance()
+        //{
+
+        //    var vssCred = GetWowRegCredentials();
+        //    Uri connectionUri = new Uri(@"https://microsoft.visualstudio.com");
+        //    var client = new TfsTeamProjectCollection(connectionUri, vssCred);
+        //    return (WorkItemStore)client.GetService(typeof(WorkItemStore));
+        //}
+
+        //public VssAadCredential GetWowRegCredentials()
+        //{
+
+        //    var filePath = HostingEnvironment.MapPath(@"~/wwwroot/KeyValut/AppSettings.json");
+
+        //    VssAadCredential cred = null;
+        //    dynamic settings;
+        //    using (StreamReader r = new StreamReader(filePath))
+        //    {
+        //        string json = r.ReadToEnd();
+        //        settings = JsonConvert.DeserializeObject<dynamic>(json);
+        //    }
+        //    try
+        //    {
+        //        TfsCredentials tfs = new TfsCredentials(settings.AuthAuthority.ToString(), settings.ProgramId.ToString(), settings.ProgramSecret.ToString(), settings.VaultName.ToString());
+        //        cred = tfs.GetVssAadCredential("wowreg", "WOWREG");
+        //        return cred;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return null;
+        //    }
+
+        //}
+
     }
 }
