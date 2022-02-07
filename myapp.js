@@ -1,5 +1,3 @@
-
-
 const all_emp_data = []
 
 const current_week = [];
@@ -17,7 +15,7 @@ const img_url = [
     //Feb -4
     ["https://images.unsplash.com/photo-1420585269105-d908ec316eb3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
         "https://images.unsplash.com/photo-1514377006585-6e7975371bd6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=388&q=80",
-        "https://images.unsplash.com/photo-1482003297000-b7663a1673f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+       
         "https://images.unsplash.com/photo-1507652400761-fa6f1489004a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
         
     ],
@@ -564,7 +562,7 @@ const load_bg_img = () => {
     let month = d.getMonth();
     var sz = img_url[month].length;
     var ind = Math.floor((Math.random() * (sz - 0)) + 0) % sz;
-    console.log(ind);
+    //console.log(ind);
     var fin_img = "url(" + img_url[month][ind] + ")";
 
     $("body").css("background-image", fin_img);
@@ -666,7 +664,7 @@ function Generate_excel(data, week) {
                 alert('data not send to Excel export');
             }
         });
-        alert("Please wait while fetching current week data");
+        alert("Please wait while exporting data to excel");
 
     }, 2000);
    
@@ -717,70 +715,3 @@ exp_btn.addEventListener('click', (e) => {
 });
 
 
-
-
-
-
-  //console.log(week);
-    //var Result = [];
-    //var head = ["Vid"];
-    //for (var i = 0; i < week.length-2; i++) {
-    //    if (i == 0)
-    //        head.push("Mon-" + week[i].slice(-2) );
-    //    if (i == 1)
-    //        head.push("Tue-" + week[i].slice(-2) );
-    //    if (i == 2)
-    //        head.push("Wed-" + week[i].slice(-2) );
-    //    if (i == 3)
-    //        head.push("Thurs-" + week[i].slice(-2));
-    //    if (i == 4)
-    //        head.push("Fri-" + week[i].slice(-2));
-    //}
-    //Result.push(head);
-    //for (var i = 0; i < data_emp_order.length; i++) {
-    //    var tmp = [data_emp_order[i]], vid = data_emp_order[i];
-    //    for (var j = 0; j < week.length-2; j++) {
-
-    //        var tmp_val = Get_exp_status(data[vid + "_" + week[j]]);
-    //        if (tmp_val) {
-    //            tmp.push(tmp_val);
-    //        }
-    //        else tmp.push("");
-    //    }
-    //    Result.push(tmp);
-    //}
-
-    //var csvContent = '';
-
-    //Result.forEach(function (RowItem, RowIndex) {
-    //    RowItem.forEach(function (ColItem, ColIndex) {
-    //        csvContent += ColItem + ',';
-    //        if (ColItem == "8")
-    //            RowItem.getCell(ColIndex).font = { color: { argb: "004e47cc" } };
-    //    });
-    //    csvContent += "\r\n";
-    //});
-
-
-    //var download = function (content, fileName, mimeType) {
-    //    var a = document.createElement('a');
-    //    mimeType = mimeType || 'application/octet-stream';
-
-    //    if (navigator.msSaveBlob) { 
-    //        navigator.msSaveBlob(new Blob([content], {
-    //            type: mimeType
-    //        }), fileName);
-    //    } else if (URL && 'download' in a) { 
-    //        a.href = URL.createObjectURL(new Blob([content], {
-    //            type: mimeType
-    //        }));
-    //        a.setAttribute('download', fileName);
-    //        document.body.appendChild(a);
-    //        a.click();
-    //        document.body.removeChild(a);
-    //    } else {
-    //        location.href = 'data:application/octet-stream,' + encodeURIComponent(content); 
-    //    }
-    //}
-
-    //download(csvContent, 'Weekly-Data.csv', 'text/csv;encoding:utf-8');
