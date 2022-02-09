@@ -32,15 +32,89 @@ using System.IO;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Microsoft.VisualStudio.Services.Client;
 using System.Web.Hosting;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OpenIdConnect;
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
+using Microsoft.Owin.Security.OAuth;
+using System.Runtime.Remoting.Contexts;
+using Microsoft.Ajax.Utilities;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApplication2.Controllers
 {
+    [Authorize]
     public class Leave_Controller : Controller
     {
-       
+        Dictionary<string, string> names;
+        
+        public void SignIn()
+        {
+            if (!Request.IsAuthenticated)
+            {
+                HttpContext.GetOwinContext().Authentication.Challenge(
+                    new AuthenticationProperties { RedirectUri = "/" },
+                    OpenIdConnectAuthenticationDefaults.AuthenticationType);
+            }
+        }
+
+        /// <summary>
+        /// Send an OpenID Connect sign-out request.
+        /// </summary>
+        public void SignOut()
+        {
+            HttpContext.GetOwinContext().Authentication.SignOut(
+                    OpenIdConnectAuthenticationDefaults.AuthenticationType,
+                    CookieAuthenticationDefaults.AuthenticationType);
+        }
         public ActionResult Index()
         {
-            Console.WriteLine("UserName: {0}", Environment.UserName);
+            names = new Dictionary<string, string>();                              // define 
+            names.Add("v-mokund@microsoft.com", "Monjima Kundu");
+            
+            names.Add("v-dhnair@microsoft.com", "Dhanya Raman Nair");
+            names.Add("v-anuyan@microsoft.com", "Anusha Yangali");
+            names.Add("v-nagumm@microsoft.com", "Naveenkumar Gummadavelli");
+            names.Add("v-santpo@microsoft.com", "Santosh Kumar Pothankar");
+            names.Add("v-vinkar@microsoft.com", "Vinod Karimerakala");
+            names.Add("v-krsath@microsoft.com", "Krishna Sandeep Reddy");
+            names.Add("v-vipkum@microsoft.com", "Vipin Kumar");
+            names.Add("v-sogodd@microsoft.com", "Soumya Goddu");
+            names.Add("v-prpale@microsoft.com", "Prasanna Paleti");
+            names.Add("v-mohsah@microsoft.com", "Mohit Ranjan Sahu");
+            names.Add("v-pjaswanth@microsoft.com", "Palaparthi Jaswanth");
+            names.Add("v-kthamosh@microsoft.com", "Kalla Thamosh");
+            names.Add("v-venkumar@microsoft.com", "Vendra Kumar");
+            
+            names.Add("v-smohaseen@microsoft.com", "Syed Mohaseen");
+            names.Add("v-lakreddy@microsoft.com", "Lakshmi Reddy");
+            names.Add("v-ladivishnu@microsoft.com", "Lokeshwara Adivishnu");
+            names.Add("v-inpalit@microsoft.com", "Indranil Palit");
+            names.Add("v-tejaswip@microsoft.com", "Tejaswi Paricharla");
+            names.Add("v-bashasha@microsoft.com", "Shaik Basha");
+            names.Add("v-yany@microsoft.com", "Yang Yang");
+
+            //string email = this.User.FindFirstValue(ClaimTypes.Email);
+            //string user = names.GetValueOrDefault("email");
+            //Debug.WriteLine(ViewBag.Username);
+            
+            var userClaims = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+            //You get the user's first and last name below:
+            ViewBag.Name = userClaims?.FindFirst("name")?.Value;
+
+            // The 'preferred_username' claim can be used for showing the username
+            ViewBag.Username = userClaims?.FindFirst("preferred_username")?.Value;
+            string user = names[ViewBag.Username];
+            if ((user.Contains("Monjima Kundu") || user.Contains("Shaik Basha") || user.Contains("Naveenkumar Gummadavelli")))
+                return RedirectToAction("Restric_view");
+            return View();
+        }
+
+        public ActionResult Restric_view()
+        {
             return View();
         }
         public ActionResult Get_week_status()
@@ -74,7 +148,7 @@ namespace WebApplication2.Controllers
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Something went wrong");
+                        Console.WriteLine("Something went wrong" + ex.Message);
                     }
                     string stringjson = JsonConvert.SerializeObject(dt);
                     //Debug.WriteLine(stringjson);
@@ -111,7 +185,7 @@ namespace WebApplication2.Controllers
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Something went wrong");
+                        Console.WriteLine("Something went wrong" + ex.Message);
                     }
                     string stringjson = JsonConvert.SerializeObject(dt);
                     //Debug.WriteLine(stringjson);
@@ -163,10 +237,9 @@ namespace WebApplication2.Controllers
                                 //Debug.WriteLine("Data is Present");
 
                             }
-                            catch (Exception e)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine("Cannot execute query part");
-
+                                Console.WriteLine("Something went wrong" + ex.Message);
                             }
                         }
                         if (hasrows > 0)
@@ -182,9 +255,9 @@ namespace WebApplication2.Controllers
                                     cmd2.ExecuteNonQuery();
 
                                 }
-                                catch (Exception e)
+                                catch (Exception ex)
                                 {
-                                    Console.WriteLine("Efforts not updated in DB");
+                                    Console.WriteLine("Something went wrong" + ex.Message);
                                 }
                             }
                             //Week_data[x.Name_][x.Date_] = x.Value_;
@@ -206,9 +279,9 @@ namespace WebApplication2.Controllers
                                 {
                                     cmd.ExecuteNonQuery();
                                 }
-                                catch (Exception e)
+                                catch (Exception ex)
                                 {
-                                    Console.WriteLine("Efforts not updated in DB");
+                                    Console.WriteLine("Something went wrong" + ex.Message);
                                 }
                             }
                             
@@ -219,10 +292,9 @@ namespace WebApplication2.Controllers
                     }
                 });
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Cannot execute query part");
-
+                Console.WriteLine("Something went wrong" + ex.Message);
             }
             //disp_();
             return Json(new ActionInfo()
@@ -269,7 +341,7 @@ namespace WebApplication2.Controllers
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine("Something went wrong");
+                                Console.WriteLine("Something went wrong" + ex.Message);
                             }
                             string stringjson = JsonConvert.SerializeObject(dt);
                             //Debug.WriteLine(stringjson);
@@ -278,9 +350,9 @@ namespace WebApplication2.Controllers
                     });
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                Console.WriteLine("Something went wrong" + ex.Message);
             }
             return Json(dt, JsonRequestBehavior.AllowGet);
         }
